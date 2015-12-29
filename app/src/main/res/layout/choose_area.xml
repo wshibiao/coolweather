@@ -5,19 +5,29 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:background="#484E61">
-        <TextView
-            android:id="@+id/title_text"
-            android:layout_width="wrap_content"
+       >
+        <EditText
+            android:id="@+id/edit_query"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="#fff"
             android:textSize="24sp" />
+
+            <Button
+                android:paddingTop="5dp"
+                android:id="@+id/search_city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search"
+                android:layout_alignRight="@+id/edit_query"
+                />
+
     </RelativeLayout>
     <ListView
         android:id="@+id/list_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
     </ListView>
 
 </LinearLayout>
