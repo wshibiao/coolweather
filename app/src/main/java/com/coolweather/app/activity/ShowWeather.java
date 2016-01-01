@@ -1,7 +1,6 @@
 package com.coolweather.app.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -35,10 +34,6 @@ public class ShowWeather extends Activity implements View.OnClickListener {
     Button update;
     Button switchCity;
     RelativeLayout weatherLayout;
-    ProgressDialog progressDialog;
-
-    SQLiteDatabase db;
-    CoolWeatherOpenHelper dbHelper;
     String cityName;
 
     @Override
@@ -131,18 +126,5 @@ public class ShowWeather extends Activity implements View.OnClickListener {
         weather.setText(preferences.getString("天气","")); weatherLayout.setVisibility(View.VISIBLE);
     }
 
-    public void showProgressDialog() {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("正在加载");
-            progressDialog.setCanceledOnTouchOutside(false);
-        }
-        progressDialog.show();
-    }
 
-    public void closeProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
-    }
 }
