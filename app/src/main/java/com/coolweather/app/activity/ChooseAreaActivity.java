@@ -2,10 +2,12 @@ package com.coolweather.app.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,6 +54,16 @@ public class ChooseAreaActivity extends Activity implements View.OnClickListener
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataList);
         db = CoolWeatherDB.getInstance(this);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent=new Intent(ChooseAreaActivity.this,ShowWeather.class);
+                intent.putExtra("CityName",cityName);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 
     //查询点击事件
@@ -84,10 +96,8 @@ public class ChooseAreaActivity extends Activity implements View.OnClickListener
                             + "-" + city.getCity() + "-" + city.getDistrict());
                 }
             } else {
-                Toast.makeText(this, "该城市没有天气数据", Toast.LENGTH_SHORT).show();
+                queryFromServer(cityName);
             }
-        } else {
-            queryFromServer(cityName);
         }
 
     }

@@ -10,11 +10,12 @@
         android:theme="@style/AppTheme" >
         <activity android:name=".activity.ChooseAreaActivity"
             android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"></action>
-                <category android:name="android.intent.category.LAUNCHER"></category>
-            </intent-filter>
+
         </activity>
+        <activity android:name=".activity.ShowWeather">  <intent-filter>
+            <action android:name="android.intent.action.MAIN"></action>
+            <category android:name="android.intent.category.LAUNCHER"></category>
+        </intent-filter></activity>
     </application>
 
 </manifest>

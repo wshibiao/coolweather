@@ -43,6 +43,37 @@ public class CoolWeatherDB {
         return coolWeatherDB;
     }
 
+    /**
+     * 将所有天气类型存入数据库中,减少访问网络
+     * @param obj
+     */
+    public void saveWeatherId(JSONObject obj){
+        if(obj!=null){
+            try{
+                db.execSQL("insert into WeatherId (wid,weather) values(?,?)"
+                        ,new Object[]{obj.getInt("wid"),obj.getString("weather")});
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 根据ID查找天气类型
+     * @param id
+     */
+
+    public String loadWeatherId(String id){
+        String weatherType;
+        Cursor cursor;
+        if((cursor=db.rawQuery("select * from WeatherId where wid=?", new String[]{id})).moveToFirst()){
+            weatherType=cursor.getString(cursor.getColumnIndex("weather"));
+            return weatherType;
+        }else
+            return null;
+
+    }
+
     /*
     *将所有城市保存在数据库中
      */

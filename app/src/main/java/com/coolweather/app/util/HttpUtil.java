@@ -12,6 +12,7 @@ import org.apache.http.util.EntityUtils;
  */
 public class HttpUtil {
     /**
+     * 获取城市列表
      * @param httpUrl
      *            :请求接口
      * @param listener
@@ -46,5 +47,13 @@ public class HttpUtil {
         }).start();
 
     }
+
+    /**
+     * 根据用户输入的城市名字查询该城市的天气
+     * @param HttpUrl API地址
+     * @param cityName 查询的城市名
+     */
+
+
 
 }
