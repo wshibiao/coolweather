@@ -1,10 +1,12 @@
 package com.coolweather.app.activity;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.coolweather.app.R;
-import com.coolweather.app.db.CoolWeatherOpenHelper;
+import com.coolweather.app.service.AutoUpdateWeather;
 import com.coolweather.app.util.HttpCallbackListener;
 import com.coolweather.app.util.HttpUtil;
 import com.coolweather.app.util.Utility;
@@ -24,18 +26,31 @@ public class ShowWeather extends Activity implements View.OnClickListener {
     private static final String WEATHERTYPE = "http://v.juhe.cn/weather/uni?key=6d660d7c817e5b57ab0afd636d336f3b";
 
     //控件
-    TextView temperature;
-    TextView wind;
-    TextView temperatureRange;
-    TextView city;
-    TextView upTime;
-    TextView humdity;
-    TextView weather;
-    Button update;
-    Button switchCity;
-    RelativeLayout weatherLayout;
-    String cityName;
+    private TextView temperature;
+    private TextView wind;
+    private TextView temperatureRange;
+    private TextView city;
+    private  TextView upTime;
+    private  TextView humdity;
+    private TextView weather;
+    private Button update;
+    private Button switchCity;
+    private  RelativeLayout weatherLayout;
+    private String cityName;
 
+    private AutoUpdateWeather.ForegroundServiceBinder foregroundServiceBinder;
+    private ServiceConnection connection=new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            foregroundServiceBinder=(AutoUpdateWeather.ForegroundServiceBinder) service;
+            foregroundServiceBinder.updateForegroundService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
     @Override
     public void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
@@ -53,7 +68,15 @@ public class ShowWeather extends Activity implements View.OnClickListener {
         weatherLayout=(RelativeLayout)findViewById(R.id.weather_info);
         update.setOnClickListener(this);
         switchCity.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        queryWeather(cityName);
         showWeather();
+
     }
 
     @Override
@@ -61,13 +84,14 @@ public class ShowWeather extends Activity implements View.OnClickListener {
         switch (view.getId()){
             case R.id.addCity:
                 Intent intent=new Intent(ShowWeather.this,ChooseAreaActivity.class);
+                intent.putExtra("is_from_weather_activity",true);
                 startActivity(intent);
+
                 finish();
                 break;
             case  R.id.refresh_weather:
                 queryWeather(cityName);
                 showWeather();
-
                 break;
             default:
                 break;
@@ -123,7 +147,12 @@ public class ShowWeather extends Activity implements View.OnClickListener {
         preferences=getSharedPreferences("todayWeather",MODE_PRIVATE);
         city.setText(preferences.getString("city",""));
         temperatureRange.setText(preferences.getString("温度范围",""));
-        weather.setText(preferences.getString("天气","")); weatherLayout.setVisibility(View.VISIBLE);
+        weather.setText(preferences.getString("天气",""));
+        weatherLayout.setVisibility(View.VISIBLE);
+        Intent intent=new Intent(ShowWeather.this, AutoUpdateWeather.class);
+        startService(intent);
+        Intent bindIntent=new Intent(this,AutoUpdateWeather.class);
+        bindService(bindIntent, connection, BIND_AUTO_CREATE);
     }
 
 

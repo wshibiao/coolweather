@@ -4,16 +4,18 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.coolweather.app.MyAdapter;
 import com.coolweather.app.R;
 import com.coolweather.app.db.CoolWeatherDB;
 import com.coolweather.app.model.CityList;
@@ -27,19 +29,20 @@ import java.util.List;
 /**
  * Created by wsb on 2015/12/25.
  */
-public class ChooseAreaActivity extends Activity implements View.OnClickListener {
+public class ChooseAreaActivity extends Activity  {
     //城市列表API地址
     public static final String HTTPURL = "http://v.juhe.cn/weather/citys?key=6d660d7c817e5b57ab0afd636d336f3b";
-   //控件
+    //控件2
     private ProgressDialog progressDialog;
     private ListView listView;
     private EditText cityText;
-    private Button searchCity;
+    private SwipeRefreshLayout refreshLayout;
     //数据成员
-    private ArrayAdapter<String> adapter;
+    private MyAdapter adapter;
     private CoolWeatherDB db;
-    private List<String> dataList = new ArrayList<String>();
+    private List<CityList> dataList = new ArrayList<CityList>();
     private String cityName;
+
 
     @Override
     public void onCreate(Bundle saveInstanceState) {
@@ -49,16 +52,41 @@ public class ChooseAreaActivity extends Activity implements View.OnClickListener
         listView = (ListView) findViewById(R.id.list_view);
         //获取城市名用于查询
         cityText = (EditText) findViewById(R.id.edit_query);
-        searchCity = (Button) findViewById(R.id.search_city);
-        searchCity.setOnClickListener(this);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataList);
+
+
+        adapter = new MyAdapter(this, R.layout.item_listview, dataList);
         db = CoolWeatherDB.getInstance(this);
+        loadCityFromServer();
+
+        cityText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                cityName = cityText.getText().toString();
+                queryCities(cityName);
+                if (s.length() == 0) {
+                    dataList.clear();
+                    adapter.notifyDataSetChanged();
+                }
+
+            }
+        });
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent=new Intent(ChooseAreaActivity.this,ShowWeather.class);
-                intent.putExtra("CityName",cityName);
+                cityName = dataList.get(position).getDistrict();
+                Intent intent = new Intent(ChooseAreaActivity.this, ShowWeather.class);
+                intent.putExtra("CityName", cityName);
                 startActivity(intent);
                 finish();
             }
@@ -66,18 +94,8 @@ public class ChooseAreaActivity extends Activity implements View.OnClickListener
 
     }
 
-    //查询点击事件
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.search_city:
-                cityName = cityText.getText().toString();
-                queryCities(cityName);
-                break;
-            default:
-                break;
-        }
-    }
+
+
 
     /**
      * 查询城市
@@ -92,19 +110,17 @@ public class ChooseAreaActivity extends Activity implements View.OnClickListener
             listView.setSelection(0);
             if (!cityList.isEmpty()) {
                 for (CityList city : cityList) {
-                    dataList.add(city.getId() + "-" + city.getProvince()
-                            + "-" + city.getCity() + "-" + city.getDistrict());
+                    dataList.add(city);
                 }
             } else {
-                queryFromServer(cityName);
+                Toast.makeText(ChooseAreaActivity.this,"没有该城市天气数据",Toast.LENGTH_SHORT).show();
             }
         }
 
     }
 
     //服务器上查询数据
-    private void queryFromServer(final String cityName) {
-        showProgressDialog();
+    private void loadCityFromServer() {
         HttpUtil.sendHttpRequest(HTTPURL, new HttpCallbackListener() {
 
             @Override
@@ -116,9 +132,11 @@ public class ChooseAreaActivity extends Activity implements View.OnClickListener
                         @Override
                         public void run() {
                             closeProgressDialog();
-                            queryCities(cityName);
+
                         }
                     });
+
+                }else{
 
                 }
             }
@@ -161,6 +179,10 @@ public class ChooseAreaActivity extends Activity implements View.OnClickListener
 
         @Override
         public void onBackPressed () {
+           if(cityName==null){
+               Intent intent=new Intent(ChooseAreaActivity.this,ShowWeather.class);
+               startActivity(intent);
+           }
             finish();
         }
 }

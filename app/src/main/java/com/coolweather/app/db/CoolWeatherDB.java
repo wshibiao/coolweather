@@ -102,9 +102,11 @@ public class CoolWeatherDB {
         CityList city = new CityList();
         Cursor cursor;
         //查询用户输入的是否是省名
-        if ((cursor = db.rawQuery("select * from CityList where province=?"
-                , new String[]{name})).moveToFirst()) {
-           do{
+        if ((cursor = db.rawQuery("select * from CityList where district LIKE ? or province LIKE ?"
+                , new String[]{"%"+name+"%"})).moveToFirst())
+            {
+
+            do{
                 city = new CityList();
                 city.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 city.setProvince(cursor.getString(cursor.getColumnIndex("province")));
@@ -113,18 +115,6 @@ public class CoolWeatherDB {
                cityLists.add(city);
             }while (cursor.moveToNext());
         }
-        //用户输入的是城市名
-        else if ((cursor = db.rawQuery("select * from CityList where district=?"
-                , new String[]{name})).moveToFirst()) {
-                city = new CityList();
-                city.setId(cursor.getInt(cursor.getColumnIndex("id")));
-                city.setProvince(cursor.getString(cursor.getColumnIndex("province")));
-                city.setCity(cursor.getString(cursor.getColumnIndex("city")));
-            city.setDistrict(cursor.getString(cursor.getColumnIndex("district")));
-                if (city.getDistrict().equals(name) || city.getDistrict().contains(name)) {
-                    cityLists.add(city);
-                }
-        };
             cursor.close();
             return cityLists;
         }

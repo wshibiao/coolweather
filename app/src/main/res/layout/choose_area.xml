@@ -13,15 +13,6 @@
             android:layout_centerInParent="true"
             android:textSize="24sp" />
 
-            <Button
-                android:paddingTop="5dp"
-                android:id="@+id/search_city"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/search"
-                android:layout_alignRight="@+id/edit_query"
-                />
-
     </RelativeLayout>
     <ListView
         android:id="@+id/list_view"

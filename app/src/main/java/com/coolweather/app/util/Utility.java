@@ -95,7 +95,6 @@ public class Utility {
                 JSONObject object=new JSONObject(response);
                 object=object.getJSONObject("result");
                 object=object.getJSONObject("sk");
-
                 SharedPreferences.Editor editor=context.getSharedPreferences("recentlyWeather"
                         ,context.MODE_PRIVATE).edit();
                 editor.putString("当前温度",object.getString("temp"));
