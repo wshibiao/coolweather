@@ -3,9 +3,7 @@
     android:id="@+id/weather_info"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+
         <Button
             android:id="@+id/addCity"
             android:layout_width="wrap_content"
@@ -98,7 +96,6 @@
                 android:text="我是你爹"
                 android:paddingTop="20dp"/>
         </RelativeLayout>
-    </ScrollView>
 
 
 

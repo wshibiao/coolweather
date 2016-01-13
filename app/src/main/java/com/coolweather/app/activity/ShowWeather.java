@@ -153,6 +153,7 @@ public class ShowWeather extends Activity implements View.OnClickListener {
         startService(intent);
         Intent bindIntent=new Intent(this,AutoUpdateWeather.class);
         bindService(bindIntent, connection, BIND_AUTO_CREATE);
+        foregroundServiceBinder.updateForegroundService();
     }
 
 
