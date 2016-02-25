@@ -2,8 +2,6 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_refresh.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/action_refresh.xml" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/listview_footer.xml" charset="GBK" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

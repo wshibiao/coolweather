@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+    <ImageView
+        android:id="@+id/welcome_pic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/splash"/>
+    <Button
+        android:id="@+id/choose_city"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="300dp"
+        android:text="选择城市"
+       ></Button>
+  </LinearLayout>
+
+
+
+
